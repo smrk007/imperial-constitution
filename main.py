@@ -58,6 +58,7 @@ def normalize(message):
         c = unicodedata.normalize('NFKD', c)[0]
         if c in string.punctuation or c in string.whitespace:
             continue
+        if c == '@': c = 'a'
         c = c.lower()
         if prev_c == c:
             continue
