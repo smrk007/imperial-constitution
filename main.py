@@ -36,6 +36,8 @@ async def verify_role(message):
     await message.add_reaction(u"\U0001F396")
   if 'ImperialSenator' in roles:
     await message.add_reaction(u"\U0001FA99")
+  if 'Jester' in roles:
+    await message.add_reaction(u"\U0001f921")
 
 async def check_bans(message):
   if message.author.id == bot.user.id:
