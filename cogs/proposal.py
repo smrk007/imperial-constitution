@@ -131,6 +131,7 @@ class Proposal(commands.Cog):
         bot.event(self.on_raw_reaction_remove)
 
     async def _confirm_proposal(self, message: discord.Message):
+        await message.add_reaction('⬆️')
         prop_id = message.id
         prop_msg = self._show_proposal(prop_id)
         msg = f'Proposal #{prop_id} has been added :white_check_mark:: {prop_msg}'
