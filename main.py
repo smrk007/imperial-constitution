@@ -28,11 +28,14 @@ def readBans():
 async def on_message(message):
   await bot.process_commands(message)
   await check_bans(message)
-  await verify_emperor(message)
+  await verify_role(message)
 
-async def verify_emperor(message):
-  if 'Emperor' in message.author.roles:
+async def verify_role(message):
+  roles = [role.name for role in message.author.roles]
+  if 'Emperor' in roles:
     await message.add_reaction(':military_medal:')
+  if 'ImperialSenator' in roles:
+    await message.add_reaction(':coin:')
 
 async def check_bans(message):
   if message.author.id == bot.user.id:
