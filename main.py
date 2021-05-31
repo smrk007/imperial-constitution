@@ -29,7 +29,6 @@ def readBans():
 
 @bot.event
 async def on_message(message):
-  print(message.channel.name)
   if message.channel.name != 'the-empire':
     return
   await bot.process_commands(message)
