@@ -5,7 +5,10 @@ from discord.ext.commands import *
 from discord.ext import commands
 import subprocess
 import traceback
+import string
+import unicodedata
 import re
+import confusables
 from auth import DISCORD_TOKEN
 from trim import trim_nl
 import json
@@ -27,8 +30,13 @@ def readBans():
 @bot.event
 async def on_message(message):
   await bot.process_commands(message)
-  await check_bans(message)
+  if await check_bans(message):
+      return
   await verify_role(message)
+
+@bot.event
+async def on_message_edit(before, after):
+    await check_bans(after)
 
 async def verify_role(message):
   roles = [role.name for role in message.author.roles]
@@ -39,16 +47,37 @@ async def verify_role(message):
   if 'Jester' in roles:
     await message.add_reaction(u"\U0001f921")
 
+def normalize(message):
+    msg2 = ''
+    prev_c = '\x00'
+    for c in message:
+        c = unicodedata.normalize('NFKD', c)[0]
+        if c in string.punctuation or c in string.whitespace:
+            continue
+        c = c.lower()
+        if prev_c == c:
+            continue
+        prev_c = c
+        msg2 += c
+    return msg2
+
+def get_confusables(message):
+    msg2 = normalize(message)
+    return [m.lower() for m in confusables.normalizes(msg2)]
+
 async def check_bans(message):
-  if message.author.id == bot.user.id:
-      return
-  bans = readBans()
-  for ban in bans.values():
-    if ban['word'].lower() in message.content.lower():
-      print('Banned: ' + message.content)
-      await message.reply(content="This message uses forbidden language.")
-      await message.delete()
-      return
+    if message.author.id == bot.user.id:
+        return False
+    bans = readBans()
+    for ban in bans.values():
+        for canonnical in get_confusables(message.content):
+            if normalize(ban['word']) in canonnical:
+                print('Banned: ' + message.content)
+                msg = f"<@{message.author.id}> This message uses forbidden language."
+                await message.reply(content=msg)
+                await message.delete()
+                return True
+    return False
 
 @bot.event
 async def on_error(evt_type, *args, **kwargs):
@@ -78,6 +107,8 @@ async def on_command_error(ctx, err):
         await ctx.send(':bangbang: This command cannot be used in PMs.')
     else:
         await ctx.send('An error has occurred... :disappointed:')
+        await ctx.send(''.join(traceback.format_exception(type(err), err,
+                err.__traceback__)))
         log.error(f'Ignoring exception in command {ctx.command}')
         log.error(''.join(traceback.format_exception(type(err), err,
                 err.__traceback__)))
