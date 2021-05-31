@@ -69,14 +69,15 @@ async def check_bans(message):
     if message.author.id == bot.user.id:
         return False
     bans = readBans()
+    nmsg = normalize(message.content)
     for ban in bans.values():
-        for canonnical in get_confusables(message.content):
-            if normalize(ban['word']) in canonnical:
-                print('Banned: ' + message.content)
-                msg = f"<@{message.author.id}> This message uses forbidden language."
-                await message.reply(content=msg)
-                await message.delete()
-                return True
+        patt = re.compile(confusables.confusable_regex(ban['word']))
+        if patt.search(nmsg):
+            print('Banned: ' + message.content)
+            msg = f"<@{message.author.id}> This message uses forbidden language."
+            await message.reply(content=msg)
+            await message.delete()
+            return True
     return False
 
 @bot.event
