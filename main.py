@@ -29,6 +29,9 @@ def readBans():
 
 @bot.event
 async def on_message(message):
+  print(message.channel.name)
+  if message.channel.name != 'the-empire':
+    return
   await bot.process_commands(message)
   if await check_bans(message):
       return
@@ -36,7 +39,9 @@ async def on_message(message):
 
 @bot.event
 async def on_message_edit(before, after):
-    await check_bans(after)
+  if before.channel.category.name != 'THE EMPIRE':
+    return
+  await check_bans(after)
 
 async def verify_role(message):
   roles = [role.name for role in message.author.roles]
