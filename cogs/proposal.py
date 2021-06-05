@@ -230,17 +230,6 @@ class Proposal(commands.Cog):
                     'so your proposal is immediately rejected')
             return
 
-        # Check if proposition is valid
-        #print(branches)
-        #if not proposal_url or not proposal_branch:
-        #    subprocess.call(['git','fetch'])
-        #    branches = [branch.lstrip() for branch in subprocess.check_output(['git', 'branch', '-r']).decode().split('\n')]
-        #    await ctx.message.reply(content='The proposition presented is invalid.\n' +
-        #            'Please create a pull request here: https://github.com/smrk007/imperial-constitution\n' +
-        #            'Then, type the exact name of the branch as your proposition, like:\n\n' +
-        #            '>propose your-fork-repo-url your-branch-name')
-        #    return
-
         self.db.add_proposal(ctx.message, 'amendment',
                 proposal_url=proposal_url, proposal_branch=proposal_branch)
         await self._confirm_proposal(ctx.message)
