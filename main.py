@@ -45,13 +45,13 @@ async def on_message_edit(before, after):
 async def verify_role(message):
   roles = [role.name for role in message.author.roles]
   if 'Emperor' in roles:
-    await message.add_reaction(u"\U0001f921")
+    await message.add_reaction(u"\U0001F396")
   elif 'ImperialSenator' in roles:
-    await message.add_reaction(u"\U0001f921")
+    await message.add_reaction(u"\U0001F396")
   elif 'Jester' in roles:
-    await message.add_reaction(u"\U0001F396")
+    await message.add_reaction(u"\u2694")
   else:
-    await message.add_reaction(u"\U0001F396")
+    await message.add_reaction(u"\u2694")
 
 def normalize(message):
     msg2 = ''
