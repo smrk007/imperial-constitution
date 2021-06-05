@@ -154,10 +154,7 @@ class Proposal(commands.Cog):
 
     @commands.command()
     async def emperor(self, ctx):
-        if isEmperor(ctx.message.author):
-            await ctx.message.reply('You are most definitely the emperor! Long live the empire!')
-        else:
-            await ctx.message.reply('No get away you scumbag non-emperor!')
+        await ctx.message.reply('The Emperor is Dead! Long Live The Empire!')
 
     @commands.command()
     async def bans(self, ctx):
