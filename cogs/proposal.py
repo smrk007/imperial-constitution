@@ -151,6 +151,10 @@ class Proposal(commands.Cog):
             return f'unban word {word} (id={ban_id})'
         else:
             return 'Unknown proposal'
+        
+    @commands.command()
+    async def dork(self, ctx):
+        await ctx.message.reply(content="The imperial dork is clearly Matthew")
 
     @commands.command()
     async def emperor(self, ctx):
